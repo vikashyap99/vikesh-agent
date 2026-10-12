@@ -1,0 +1,46 @@
+# Where runtime data (voice clone, samples, memory, generated audio) is stored.
+# Leave null to use this folder; set VIK_DATA_DIR (or this key) to relocate,
+# e.g. a persistent disk mount in production.
+data_dir: null
+
+persona:
+  context_file: context.md
+  profile_file: profile.md
+  profile_summary_file: profile_summary.md
+  profile_mode: auto   # auto = inject condensed summary (generated once); full = inject profile.md whole
+
+llm:
+  # OpenRouter — one OpenAI-compatible endpoint, many free models.
+  # Free tier: ~50 req/day (1000/day after a one-time $10 top-up), 20 req/min.
+  # Browse/switch free models: https://openrouter.ai/models?max_price=0
+  # NOTE: free models share an upstream pool and can throttle (429) intermittently;
+  # fallback_models lets OpenRouter auto-route to the next one.
+  base_url: https://openrouter.ai/api/v1
+  model: nvidia/nemotron-3-super-120b-a12b:free
+  api_key_env: OPENROUTER_API_KEY
+  temperature: 0.7
+  max_tokens: 768
+  reasoning_effort: null
+  openrouter_reasoning: false   # disable chain-of-thought so replies stay clean
+  fallback_models:
+    - google/gemma-4-31b-it:free
+    - dots-studio/dots-3-note-preview:free
+
+stt:
+  base_url: https://api.groq.com/openai/v1
+  model: whisper-large-v3-turbo
+  api_key_env: GROQ_API_KEY
+  language: null
+
+tts:
+  provider: fish
+  base_url: https://api.fish.audio
+  model: s2.1-pro-free
+  api_key_env: FISH_API_KEY
+  voice_api: https://api.fish.audio/model
+  reference_id: null
+  reference_audio: voice/ref.wav
+  reference_text: voice/ref.txt
+  format: mp3
+
+output_dir: output

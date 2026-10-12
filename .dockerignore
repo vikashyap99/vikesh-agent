@@ -1,0 +1,16 @@
+.venv
+__pycache__
+*.pyc
+.env
+.git
+.gitignore
+.DS_Store
+web/node_modules
+web/dist
+output
+voice
+memory
+profile_summary.md
+Dockerfile
+.dockerignore
+render.yaml

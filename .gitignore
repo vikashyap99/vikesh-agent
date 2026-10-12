@@ -1,0 +1,16 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+output/*
+!output/.gitkeep
+voice/*
+!voice/.gitkeep
+voice_id.txt
+.DS_Store
+web/node_modules/
+web/dist/
+memory/*
+!memory/.gitkeep
+profile_summary.md
+data/

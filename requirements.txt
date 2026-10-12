@@ -1,0 +1,7 @@
+openai==3.28.0
+python-dotenv==1.2.4
+PyYAML==6.0.3
+requests==2.34.2
+fastapi==0.143.0
+uvicorn==0.54.0
+python-multipart==0.0.32

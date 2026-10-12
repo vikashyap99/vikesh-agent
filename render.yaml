@@ -1,0 +1,29 @@
+# Render Blueprint — deploy via: render.com → New → Blueprint → this repo.
+# It reads this file. The app is one Docker container: FastAPI serves the
+# built React UI and talks to the cloud APIs (OpenRouter/Groq/Fish Audio).
+services:
+  - type: web
+    name: vik-agent
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    # Persistent disk requires a paid instance (Starter or higher); the free
+    # plan has no disk and voice/memory would reset on every redeploy.
+    plan: starter
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      # Paste these three API keys in the Render dashboard when prompted
+      # (render.yaml uses sync:false so they are never stored in this file).
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FISH_API_KEY
+        sync: false
+      # Voice clone, samples, memory and generated audio live on the disk.
+      - key: VIK_DATA_DIR
+        value: /var/data
+    disk:
+      name: vik-data
+      mountPath: /var/data
+      sizeGB: 1
