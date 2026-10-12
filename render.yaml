@@ -6,9 +6,12 @@ services:
     name: vik-agent
     runtime: docker
     dockerfilePath: ./Dockerfile
-    # Persistent disk requires a paid instance (Starter or higher); the free
-    # plan has no disk and voice/memory would reset on every redeploy.
-    plan: starter
+    # Free plan. NOTE: Render free services have no persistent disk, spin down
+    # after ~15 min of inactivity, and reset the container filesystem on sleep
+    # and redeploy. So the voice clone / memory start empty again — re-train the
+    # voice once from the UI after a fresh deploy. To keep them permanently,
+    # raise the plan (Starter+) and add a disk block.
+    plan: free
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
@@ -20,10 +23,7 @@ services:
         sync: false
       - key: FISH_API_KEY
         sync: false
-      # Voice clone, samples, memory and generated audio live on the disk.
+      # Where runtime data (voice clone, samples, memory, audio) is written.
+      # Plain container storage on the free plan (no disk mount).
       - key: VIK_DATA_DIR
         value: /var/data
-    disk:
-      name: vik-data
-      mountPath: /var/data
-      sizeGB: 1

@@ -176,19 +176,20 @@ APIs. `Dockerfile`, `.dockerignore` and `render.yaml` are included.
 1. Push this repo to GitHub.
 2. Render → **New → Blueprint** → pick the repo (it reads `render.yaml`).
 3. Enter the secrets when prompted: `OPENROUTER_API_KEY`, `GROQ_API_KEY`, `FISH_API_KEY`.
-4. Deploy. `render.yaml` sets `VIK_DATA_DIR=/var/data` and mounts a 1 GB disk there,
-   so the voice clone, `memory/` and generated audio survive restarts/redeploys.
+4. Deploy. `render.yaml` ships on the **free plan** (no persistent disk).
 
 Run command used in the image: `uvicorn server:app --host 0.0.0.0 --port $PORT`
 (single worker, health check `/api/health`).
 
-> ⚠️ **Persistent disks on Render require a paid instance** (Starter+). On the free
-> plan the container has no disk, so it works but resets voice/learning on each
-> restart or redeploy.
+> ⚠️ **Free plan caveats** — Render free services have no persistent disk, spin down
+> after ~15 min idle (first request takes a few seconds to wake), and reset the
+> container filesystem on sleep and redeploy. The app works fine, but the voice
+> clone and learned memory start empty again — open the app and **Train voice** once
+> after a fresh deploy. To keep them permanently, switch the service to **Starter+**
+> and add a `disk:` block (1 GB is plenty) to `render.yaml`.
 
-> ℹ️ `voice/` and `memory/` are gitignored (they're personal), so a fresh deploy
-> starts empty — open the app and use **Train voice** once to create the clone; it
-> is then stored on the disk and reused.
+> ℹ️ `voice/` and `memory/` are gitignored (they're personal), so a fresh commit never
+> ships them to the public repo.
 
 **Local Docker check**
 
